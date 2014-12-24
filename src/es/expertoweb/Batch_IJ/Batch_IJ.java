@@ -11,9 +11,7 @@ import ij.ImagePlus;
 import ij.process.*;  
 import ij.IJ;  
 import ij.Macro;  
-import java.io.File;
 import java.awt.Color; 
-
 
 /**
  *
@@ -113,11 +111,28 @@ public class Batch_IJ extends PlugInFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jRadioButton1 = new javax.swing.JRadioButton();
+        jPanel1 = new javax.swing.JPanel();
+        jPanel4 = new javax.swing.JPanel();
+        checkbox1 = new java.awt.Checkbox();
+        button1 = new java.awt.Button();
+        panel1 = new java.awt.Panel();
+        jPanel5 = new javax.swing.JPanel();
         panel2 = new java.awt.Panel();
         checkbox2 = new java.awt.Checkbox();
         checkbox3 = new java.awt.Checkbox();
         button2 = new java.awt.Button();
         panel3 = new java.awt.Panel();
+
+        jRadioButton1.setText("jRadioButton1");
+
+        jPanel4.setBackground(new java.awt.Color(204, 204, 204));
+
+        checkbox1.setLabel("checkbox1");
+        jPanel4.add(checkbox1);
+
+        button1.setLabel("button1");
+        jPanel4.add(button1);
 
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
@@ -134,12 +149,7 @@ public class Batch_IJ extends PlugInFrame {
         checkbox3.setLabel("checkbox3");
         panel2.add(checkbox3);
 
-        button2.setLabel("Select folder");
-        button2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                button2ActionPerformed(evt);
-            }
-        });
+        button2.setLabel("button2");
         panel2.add(button2);
 
         add(panel2, java.awt.BorderLayout.WEST);
@@ -157,10 +167,6 @@ public class Batch_IJ extends PlugInFrame {
         System.exit(0);
     }//GEN-LAST:event_exitForm
 
-    private void button2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button2ActionPerformed
-            IJ.run("Bio-Formats Importer");
-    }//GEN-LAST:event_button2ActionPerformed
-
     /**
      * @param args the command line arguments
      */
@@ -171,10 +177,19 @@ public class Batch_IJ extends PlugInFrame {
             }
         });
     }
+
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private java.awt.Button button1;
     private java.awt.Button button2;
+    private java.awt.Checkbox checkbox1;
     private java.awt.Checkbox checkbox2;
     private java.awt.Checkbox checkbox3;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
+    private javax.swing.JRadioButton jRadioButton1;
+    private java.awt.Panel panel1;
     private java.awt.Panel panel2;
     private java.awt.Panel panel3;
     // End of variables declaration//GEN-END:variables
