@@ -73,6 +73,10 @@
       </Constraints>
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.DesignFlowLayout"/>
+      <SubComponents>
+        <Component class="java.awt.List" name="list1">
+        </Component>
+      </SubComponents>
     </Container>
   </SubComponents>
 </Form>

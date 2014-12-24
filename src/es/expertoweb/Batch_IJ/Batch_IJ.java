@@ -55,7 +55,7 @@ public class Batch_IJ extends PlugInFrame {
         // Cleanup: remove reference to the Thread and its associated options  
         Macro.setOptions(thread, null);  
         
-        this.show();
+        setVisible(true);
     }  
   
     public ImagePlus createImage() {  
@@ -118,6 +118,7 @@ public class Batch_IJ extends PlugInFrame {
         checkbox3 = new java.awt.Checkbox();
         button2 = new java.awt.Button();
         panel3 = new java.awt.Panel();
+        list1 = new java.awt.List();
 
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
@@ -145,6 +146,8 @@ public class Batch_IJ extends PlugInFrame {
         add(panel2, java.awt.BorderLayout.WEST);
 
         panel3.setBackground(new java.awt.Color(153, 153, 153));
+        panel3.add(list1);
+
         add(panel3, java.awt.BorderLayout.CENTER);
 
         pack();
@@ -175,6 +178,7 @@ public class Batch_IJ extends PlugInFrame {
     private java.awt.Button button2;
     private java.awt.Checkbox checkbox2;
     private java.awt.Checkbox checkbox3;
+    private java.awt.List list1;
     private java.awt.Panel panel2;
     private java.awt.Panel panel3;
     // End of variables declaration//GEN-END:variables
