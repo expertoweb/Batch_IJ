@@ -8,11 +8,15 @@ package es.expertoweb.Batch_IJ;
 import ij.plugin.frame.PlugInFrame;;  
 import ij.gui.GenericDialog;  
 import ij.ImagePlus;  
+import ij.io.Opener;
+import ij.io.OpenDialog;
 import ij.process.*;  
 import ij.IJ;  
 import ij.Macro;  
-import java.io.File;
+import java.awt.CheckboxGroup;
 import java.awt.Color; 
+import java.io.File;
+
 
 
 /**
@@ -113,13 +117,34 @@ public class Batch_IJ extends PlugInFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu1 = new javax.swing.JMenu();
+        jMenu2 = new javax.swing.JMenu();
+        jMenu3 = new javax.swing.JMenu();
         panel2 = new java.awt.Panel();
         checkbox2 = new java.awt.Checkbox();
         checkbox3 = new java.awt.Checkbox();
         button2 = new java.awt.Button();
         panel3 = new java.awt.Panel();
+        textArea1 = new java.awt.TextArea();
+        textField1 = new java.awt.TextField();
+        panel4 = new java.awt.Panel();
         list1 = new java.awt.List();
+        menuBar1 = new java.awt.MenuBar();
+        menu1 = new java.awt.Menu();
+        menuItem1 = new java.awt.MenuItem();
+        menu2 = new java.awt.Menu();
 
+        jMenu1.setText("File");
+        jMenuBar1.add(jMenu1);
+
+        jMenu2.setText("Edit");
+        jMenuBar1.add(jMenu2);
+
+        jMenu3.setText("jMenu3");
+        jMenuBar1.add(jMenu3);
+
+        setPreferredSize(new java.awt.Dimension(744, 492));
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 exitForm(evt);
@@ -129,13 +154,16 @@ public class Batch_IJ extends PlugInFrame {
         panel2.setBackground(new java.awt.Color(204, 204, 204));
         panel2.setLayout(new java.awt.GridLayout(8, 1));
 
-        checkbox2.setLabel("checkbox2");
+        checkbox2.setCheckboxGroup(cbg);
+        checkbox2.setLabel("Open with Bioformats");
+        checkbox2.setState(true);
         panel2.add(checkbox2);
 
-        checkbox3.setLabel("checkbox3");
+        checkbox3.setCheckboxGroup(cbg);
+        checkbox3.setLabel("Open");
         panel2.add(checkbox3);
 
-        button2.setLabel("Select folder");
+        button2.setLabel("Select File(s)");
         button2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 button2ActionPerformed(evt);
@@ -146,9 +174,41 @@ public class Batch_IJ extends PlugInFrame {
         add(panel2, java.awt.BorderLayout.WEST);
 
         panel3.setBackground(new java.awt.Color(153, 153, 153));
-        panel3.add(list1);
+        panel3.setLayout(new java.awt.BorderLayout());
+        panel3.add(textArea1, java.awt.BorderLayout.CENTER);
+
+        textField1.setPreferredSize(new java.awt.Dimension(500, 20));
+        textField1.setText("textField1");
+        textField1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                textField1ActionPerformed(evt);
+            }
+        });
+        panel3.add(textField1, java.awt.BorderLayout.SOUTH);
 
         add(panel3, java.awt.BorderLayout.CENTER);
+
+        list1.setMultipleMode(true);
+        panel4.add(list1);
+
+        add(panel4, java.awt.BorderLayout.EAST);
+
+        menu1.setLabel("File");
+
+        menuItem1.setLabel("menuItem1");
+        menuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItem1ActionPerformed(evt);
+            }
+        });
+        menu1.add(menuItem1);
+
+        menuBar1.add(menu1);
+
+        menu2.setLabel("Edit");
+        menuBar1.add(menu2);
+
+        setMenuBar(menuBar1);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -161,8 +221,24 @@ public class Batch_IJ extends PlugInFrame {
     }//GEN-LAST:event_exitForm
 
     private void button2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button2ActionPerformed
+        if (checkbox2.getState()){
             IJ.run("Bio-Formats Importer");
+        }
+        else{
+            OpenDialog opener = new OpenDialog(".");  
+            System.out.println(opener.getPath());
+            ImagePlus imp = (new Opener()).openImage(opener.getPath());
+            imp.show();
+        }
     }//GEN-LAST:event_button2ActionPerformed
+
+    private void textField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textField1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_textField1ActionPerformed
+
+    private void menuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItem1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_menuItem1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -178,8 +254,22 @@ public class Batch_IJ extends PlugInFrame {
     private java.awt.Button button2;
     private java.awt.Checkbox checkbox2;
     private java.awt.Checkbox checkbox3;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenu jMenu3;
+    private javax.swing.JMenuBar jMenuBar1;
     private java.awt.List list1;
+    private java.awt.Menu menu1;
+    private java.awt.Menu menu2;
+    private java.awt.MenuBar menuBar1;
+    private java.awt.MenuItem menuItem1;
     private java.awt.Panel panel2;
     private java.awt.Panel panel3;
+    private java.awt.Panel panel4;
+    private java.awt.TextArea textArea1;
+    private java.awt.TextField textField1;
     // End of variables declaration//GEN-END:variables
+
+
+    CheckboxGroup cbg = new CheckboxGroup();
 }
