@@ -3,20 +3,19 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package es.expertoweb.Batch_IJ;
 
 import ij.plugin.frame.PlugInFrame;;  
 import ij.gui.GenericDialog;  
 import ij.ImagePlus;  
 import ij.io.Opener;
 import ij.io.OpenDialog;
+import ij.io.DirectoryChooser;
 import ij.process.*;  
 import ij.IJ;  
 import ij.Macro;  
 import java.awt.CheckboxGroup;
 import java.awt.Color; 
 import java.io.File;
-
 
 
 /**
@@ -36,8 +35,8 @@ public class Batch_IJ extends PlugInFrame {
     public void run(String arg) {  
   
         // A - Without automation: the dialog shows  
-        ImagePlus imp = createImage();  
-        if (null != imp) imp.show();  
+        //ImagePlus imp = createImage();  
+        //if (null != imp) imp.show();  
   
         // B - With automation: the dialog never shows:  
   
@@ -45,16 +44,26 @@ public class Batch_IJ extends PlugInFrame {
         thread.setName("Run$_create_image");  
   
         // ... so we can create many images in a loop, for example.  
-        for (int i=1; i<=3; i++) {  
+        //for (int i=1; i<=3; i++) {  
             // Create a 1024x1024 image, 160bit, with noise added  
             // and with the title storing the loop index:  
-            Macro.setOptions(thread, "title='My new image " + i + "'"  
-                  + " width=1024 height=1024 type='16-bit' add_noise");  
+        //    Macro.setOptions(thread, "title='My new image " + i + "'"  
+        //          + " width=1024 height=1024 type='16-bit' add_noise");  
             // Above, notice how we do not set the fill_value key,  
             //     so that its default value (zero in this case) is taken.  
-            ImagePlus imp2 = createImage();  
-            imp2.show();  
-        }  
+        //    ImagePlus imp2 = createImage();  
+        //    imp2.show();  
+        //}  
+        
+        System.out.println("C:\\Users\\expertoweb\\Desktop\\example\\confocal-series_z003_c002.tif");
+        ImagePlus imp = (new Opener()).openImage("C:\\Users\\expertoweb\\Desktop\\example\\confocal-series_z003_c002.tif");
+        System.out.println("C:\\Users\\expertoweb\\Desktop\\example\\confocal-series_z003_c002.tif");
+        IJ.run(imp, "Add Noise", "");
+        IJ.save(imp, "C:\\Users\\expertoweb\\Desktop\\example.tif");
+        System.out.println("C:\\Users\\expertoweb\\Desktop\\example\\confocal-series_z003_c002.tif");
+        imp.show();
+        
+        this.arg = arg;
   
         // Cleanup: remove reference to the Thread and its associated options  
         Macro.setOptions(thread, null);  
@@ -122,17 +131,17 @@ public class Batch_IJ extends PlugInFrame {
         jMenu2 = new javax.swing.JMenu();
         jMenu3 = new javax.swing.JMenu();
         panel2 = new java.awt.Panel();
-        checkbox2 = new java.awt.Checkbox();
-        checkbox3 = new java.awt.Checkbox();
         button2 = new java.awt.Button();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jList1 = new javax.swing.JList();
         panel3 = new java.awt.Panel();
         textArea1 = new java.awt.TextArea();
         textField1 = new java.awt.TextField();
-        panel4 = new java.awt.Panel();
-        list1 = new java.awt.List();
         menuBar1 = new java.awt.MenuBar();
         menu1 = new java.awt.Menu();
         menuItem1 = new java.awt.MenuItem();
+        menuItem2 = new java.awt.MenuItem();
+        menuItem5 = new java.awt.MenuItem();
         menu2 = new java.awt.Menu();
 
         jMenu1.setText("File");
@@ -152,24 +161,25 @@ public class Batch_IJ extends PlugInFrame {
         });
 
         panel2.setBackground(new java.awt.Color(204, 204, 204));
-        panel2.setLayout(new java.awt.GridLayout(8, 1));
+        panel2.setLayout(new java.awt.BorderLayout());
 
-        checkbox2.setCheckboxGroup(cbg);
-        checkbox2.setLabel("Open with Bioformats");
-        checkbox2.setState(true);
-        panel2.add(checkbox2);
-
-        checkbox3.setCheckboxGroup(cbg);
-        checkbox3.setLabel("Open");
-        panel2.add(checkbox3);
-
-        button2.setLabel("Select File(s)");
+        button2.setActionCommand("runAll");
+        button2.setLabel("Run All");
         button2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 button2ActionPerformed(evt);
             }
         });
-        panel2.add(button2);
+        panel2.add(button2, java.awt.BorderLayout.SOUTH);
+
+        jList1.setModel(new javax.swing.AbstractListModel() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public Object getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPane1.setViewportView(jList1);
+
+        panel2.add(jScrollPane1, java.awt.BorderLayout.CENTER);
 
         add(panel2, java.awt.BorderLayout.WEST);
 
@@ -188,20 +198,32 @@ public class Batch_IJ extends PlugInFrame {
 
         add(panel3, java.awt.BorderLayout.CENTER);
 
-        list1.setMultipleMode(true);
-        panel4.add(list1);
-
-        add(panel4, java.awt.BorderLayout.EAST);
-
         menu1.setLabel("File");
 
-        menuItem1.setLabel("menuItem1");
+        menuItem1.setLabel("Open...");
         menuItem1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 menuItem1ActionPerformed(evt);
             }
         });
         menu1.add(menuItem1);
+
+        menuItem2.setLabel("Open with Bioformats...");
+        menuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItem2ActionPerformed(evt);
+            }
+        });
+        menu1.add(menuItem2);
+
+        menuItem5.setActionCommand("Open directory...");
+        menuItem5.setLabel("Open directory...");
+        menuItem5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItem5ActionPerformed(evt);
+            }
+        });
+        menu1.add(menuItem5);
 
         menuBar1.add(menu1);
 
@@ -220,56 +242,75 @@ public class Batch_IJ extends PlugInFrame {
         System.exit(0);
     }//GEN-LAST:event_exitForm
 
-    private void button2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button2ActionPerformed
-        if (checkbox2.getState()){
-            IJ.run("Bio-Formats Importer");
-        }
-        else{
-            OpenDialog opener = new OpenDialog(".");  
-            System.out.println(opener.getPath());
-            ImagePlus imp = (new Opener()).openImage(opener.getPath());
-            imp.show();
-        }
-    }//GEN-LAST:event_button2ActionPerformed
+    private void menuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItem1ActionPerformed
+        // TODO add your handling code here:
+        OpenDialog opener = new OpenDialog(".");  
+        ImagePlus imp = (new Opener()).openImage(opener.getPath());
+        imp.show();
+    }//GEN-LAST:event_menuItem1ActionPerformed
+
+    private void menuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItem2ActionPerformed
+        // TODO add your handling code here:
+        IJ.run("Bio-Formats Importer");
+    }//GEN-LAST:event_menuItem2ActionPerformed
 
     private void textField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textField1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_textField1ActionPerformed
 
-    private void menuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItem1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_menuItem1ActionPerformed
+    private void button2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button2ActionPerformed
 
+    }//GEN-LAST:event_button2ActionPerformed
+
+    private void menuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItem5ActionPerformed
+        // TODO add your handling code here:
+        DirectoryChooser opener = new DirectoryChooser(".");  
+        
+    }//GEN-LAST:event_menuItem5ActionPerformed
+
+    
+    public void addCheckbox(javax.swing.JCheckBox checkBox) {
+        
+    }
+    
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Batch_IJ().setVisible(true);
+                if (args.length > 0) {
+                    (new Batch_IJ()).run(args[0]);
+                    System.exit(0);
+                }
+                else{
+                   (new Batch_IJ()).setVisible(true);
+                }
+                
             }
         });
     }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private java.awt.Button button2;
-    private java.awt.Checkbox checkbox2;
-    private java.awt.Checkbox checkbox3;
+    private javax.swing.JList jList1;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenuBar jMenuBar1;
-    private java.awt.List list1;
+    private javax.swing.JScrollPane jScrollPane1;
     private java.awt.Menu menu1;
     private java.awt.Menu menu2;
     private java.awt.MenuBar menuBar1;
     private java.awt.MenuItem menuItem1;
+    private java.awt.MenuItem menuItem2;
+    private java.awt.MenuItem menuItem5;
     private java.awt.Panel panel2;
     private java.awt.Panel panel3;
-    private java.awt.Panel panel4;
     private java.awt.TextArea textArea1;
     private java.awt.TextField textField1;
     // End of variables declaration//GEN-END:variables
 
-
+    String arg = "";
     CheckboxGroup cbg = new CheckboxGroup();
 }

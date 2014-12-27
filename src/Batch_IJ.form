@@ -34,10 +34,27 @@
           <SubComponents>
             <MenuItem class="java.awt.MenuItem" name="menuItem1">
               <Properties>
-                <Property name="label" type="java.lang.String" value="menuItem1"/>
+                <Property name="label" type="java.lang.String" value="Open..."/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuItem1ActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="java.awt.MenuItem" name="menuItem2">
+              <Properties>
+                <Property name="label" type="java.lang.String" value="Open with Bioformats..."/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuItem2ActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="java.awt.MenuItem" name="menuItem5">
+              <Properties>
+                <Property name="actionCommand" type="java.lang.String" value="Open directory..."/>
+                <Property name="label" type="java.lang.String" value="Open directory..."/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuItem5ActionPerformed"/>
               </Events>
             </MenuItem>
           </SubComponents>
@@ -90,36 +107,49 @@
         </Constraint>
       </Constraints>
 
-      <Layout class="org.netbeans.modules.form.compat2.layouts.DesignGridLayout">
-        <Property name="columns" type="int" value="1"/>
-        <Property name="rows" type="int" value="8"/>
-      </Layout>
+      <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout"/>
       <SubComponents>
-        <Component class="java.awt.Checkbox" name="checkbox2">
-          <Properties>
-            <Property name="checkboxGroup" type="java.awt.CheckboxGroup" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-              <Connection code="cbg" type="code"/>
-            </Property>
-            <Property name="label" type="java.lang.String" value="Open with Bioformats"/>
-            <Property name="state" type="boolean" value="true"/>
-          </Properties>
-        </Component>
-        <Component class="java.awt.Checkbox" name="checkbox3">
-          <Properties>
-            <Property name="checkboxGroup" type="java.awt.CheckboxGroup" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-              <Connection code="cbg" type="code"/>
-            </Property>
-            <Property name="label" type="java.lang.String" value="Open"/>
-          </Properties>
-        </Component>
         <Component class="java.awt.Button" name="button2">
           <Properties>
-            <Property name="label" type="java.lang.String" value="Select File(s)"/>
+            <Property name="actionCommand" type="java.lang.String" value="runAll"/>
+            <Property name="label" type="java.lang.String" value="Run All"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="button2ActionPerformed"/>
           </Events>
+          <Constraints>
+            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout" value="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout$BorderConstraintsDescription">
+              <BorderConstraints direction="South"/>
+            </Constraint>
+          </Constraints>
         </Component>
+        <Container class="javax.swing.JScrollPane" name="jScrollPane1">
+          <AuxValues>
+            <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
+          </AuxValues>
+          <Constraints>
+            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout" value="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout$BorderConstraintsDescription">
+              <BorderConstraints direction="Center"/>
+            </Constraint>
+          </Constraints>
+
+          <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+          <SubComponents>
+            <Component class="javax.swing.JList" name="jList1">
+              <Properties>
+                <Property name="model" type="javax.swing.ListModel" editor="org.netbeans.modules.form.editors2.ListModelEditor">
+                  <StringArray count="5">
+                    <StringItem index="0" value="Item 1"/>
+                    <StringItem index="1" value="Item 2"/>
+                    <StringItem index="2" value="Item 3"/>
+                    <StringItem index="3" value="Item 4"/>
+                    <StringItem index="4" value="Item 5"/>
+                  </StringArray>
+                </Property>
+              </Properties>
+            </Component>
+          </SubComponents>
+        </Container>
       </SubComponents>
     </Container>
     <Container class="java.awt.Panel" name="panel3">
@@ -158,22 +188,6 @@
               <BorderConstraints direction="South"/>
             </Constraint>
           </Constraints>
-        </Component>
-      </SubComponents>
-    </Container>
-    <Container class="java.awt.Panel" name="panel4">
-      <Constraints>
-        <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout" value="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout$BorderConstraintsDescription">
-          <BorderConstraints direction="East"/>
-        </Constraint>
-      </Constraints>
-
-      <Layout class="org.netbeans.modules.form.compat2.layouts.DesignFlowLayout"/>
-      <SubComponents>
-        <Component class="java.awt.List" name="list1">
-          <Properties>
-            <Property name="multipleMode" type="boolean" value="true"/>
-          </Properties>
         </Component>
       </SubComponents>
     </Container>
