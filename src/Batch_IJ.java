@@ -4,6 +4,10 @@
  * and open the template in the editor.
  */
 
+import com.sun.media.jai.codec.ByteArraySeekableStream;
+import com.sun.media.jai.codec.ImageCodec;
+import com.sun.media.jai.codec.ImageDecoder;
+import com.sun.media.jai.codec.SeekableStream;
 import ij.plugin.frame.PlugInFrame;;  
 import ij.gui.GenericDialog;  
 import ij.ImagePlus;  
@@ -15,8 +19,31 @@ import ij.IJ;
 import ij.Macro;  
 import java.awt.CheckboxGroup;
 import java.awt.Color; 
+import java.awt.Image;
+import java.awt.image.RenderedImage;
 import java.io.File;
-
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
+import javax.media.jai.PlanarImage;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
+import java.io.FileNotFoundException;
+import java.io.FileInputStream;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
+import java.awt.Image;
+import java.awt.image.RenderedImage;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 /**
  *
@@ -29,7 +56,21 @@ public class Batch_IJ extends PlugInFrame {
      */
     public Batch_IJ() {
         super("FrameDemo");
+        try{
+            dpnl = new DrawPanel();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+        //setTitle("Image");
+        
+        //setLocationRelativeTo(null);
+        //this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
         initComponents();
+        System.out.println(dpnl);
+        this.jPanel2.add(dpnl);
+        pack();
     }
     
     public void run(String arg) {  
@@ -54,22 +95,68 @@ public class Batch_IJ extends PlugInFrame {
         //    ImagePlus imp2 = createImage();  
         //    imp2.show();  
         //}  
-        
-        System.out.println("C:\\Users\\expertoweb\\Desktop\\example\\confocal-series_z003_c002.tif");
-        ImagePlus imp = (new Opener()).openImage("C:\\Users\\expertoweb\\Desktop\\example\\confocal-series_z003_c002.tif");
-        System.out.println("C:\\Users\\expertoweb\\Desktop\\example\\confocal-series_z003_c002.tif");
-        IJ.run(imp, "Add Noise", "");
-        IJ.save(imp, "C:\\Users\\expertoweb\\Desktop\\example.tif");
-        System.out.println("C:\\Users\\expertoweb\\Desktop\\example\\confocal-series_z003_c002.tif");
-        imp.show();
-        
-        this.arg = arg;
-  
+        java.awt.GraphicsConfiguration gc = this.getGraphicsConfiguration();  
+        java.awt.Rectangle bounds = gc.getBounds();
+        java.awt.Dimension size = this.getPreferredSize();  
+        this.setLocation((int) ((bounds.width / 2) - (size.getWidth() / 2)),  
+                    (int) ((bounds.height / 2) - (size.getHeight() / 2)));   
+        setVisible(true);
+       
         // Cleanup: remove reference to the Thread and its associated options  
         Macro.setOptions(thread, null);  
-        
-        setVisible(true);
     }  
+    
+    public void updateDir(String arg){
+        
+        this.path = arg;
+
+        // Directory path here
+        String path = arg; 
+
+        File folder = new File(path);
+        File[] listOfFiles = folder.listFiles(); 
+        if (listOfFiles == null || listOfFiles.length <= 0){
+            return;
+        }
+        String files[] = new String[listOfFiles.length];
+        
+        for (int i = 0; i < listOfFiles.length; i++) 
+        {
+            
+            
+            if (listOfFiles[i] != null && 
+                listOfFiles[i].isFile() &&
+                listOfFiles[i].getName().endsWith(".tif"))
+            {
+                
+                try{
+                    files[i] = listOfFiles[i].getName();
+                    //System.out.println("Open: " + listOfFiles[i].getCanonicalPath());
+    
+                    //ImagePlus imp = (new Opener()).openImage(listOfFiles[i].getCanonicalPath());
+                    
+                    //System.out.println("Add Noise: " + listOfFiles[i].getCanonicalPath());
+                    //IJ.run(imp, "Gaussian Blur...", "sigma=1");
+                    //imp.show();
+                    //Thread.sleep(4000);
+                    //System.out.println("Save: " + listOfFiles[i].getCanonicalPath() + "f");
+                    //IJ.save(imp, listOfFiles[i].getCanonicalPath());
+                    //imp.close();
+                }catch(Exception e){
+                            IJ.run("Quit");
+                            System.exit(0);
+                }
+                jPanel1.setLayout(new java.awt.BorderLayout());
+            }
+        }
+        
+        jList1.setModel(new javax.swing.AbstractListModel() {
+            String[] strings = files;
+            public int getSize() { return strings.length; }
+            public Object getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPane1.setViewportView(jList1);
+    }
   
     public ImagePlus createImage() {  
         final GenericDialog gd = new GenericDialog("Create image");  
@@ -117,6 +204,17 @@ public class Batch_IJ extends PlugInFrame {
   
         return imp;  
     }  
+    
+    static Image load(byte[] data) throws Exception{
+        Image image = null;
+        SeekableStream stream = new ByteArraySeekableStream(data);
+        String[] names = ImageCodec.getDecoderNames(stream);
+        ImageDecoder dec = 
+              ImageCodec.createImageDecoder(names[0], stream, null);
+        RenderedImage im = dec.decodeAsRenderedImage();
+        image = PlanarImage.wrapRenderedImage(im).getAsBufferedImage();
+        return image;
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -130,13 +228,11 @@ public class Batch_IJ extends PlugInFrame {
         jMenu1 = new javax.swing.JMenu();
         jMenu2 = new javax.swing.JMenu();
         jMenu3 = new javax.swing.JMenu();
-        panel2 = new java.awt.Panel();
-        button2 = new java.awt.Button();
+        jPanel1 = new javax.swing.JPanel();
+        jSplitPane1 = new javax.swing.JSplitPane();
         jScrollPane1 = new javax.swing.JScrollPane();
         jList1 = new javax.swing.JList();
-        panel3 = new java.awt.Panel();
-        textArea1 = new java.awt.TextArea();
-        textField1 = new java.awt.TextField();
+        jPanel2 = new javax.swing.JPanel();
         menuBar1 = new java.awt.MenuBar();
         menu1 = new java.awt.Menu();
         menuItem1 = new java.awt.MenuItem();
@@ -153,50 +249,34 @@ public class Batch_IJ extends PlugInFrame {
         jMenu3.setText("jMenu3");
         jMenuBar1.add(jMenu3);
 
-        setPreferredSize(new java.awt.Dimension(744, 492));
+        setMinimumSize(new java.awt.Dimension(800, 500));
+        setPreferredSize(new java.awt.Dimension(800, 500));
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 exitForm(evt);
             }
         });
 
-        panel2.setBackground(new java.awt.Color(204, 204, 204));
-        panel2.setLayout(new java.awt.BorderLayout());
+        jPanel1.setLayout(new java.awt.BorderLayout());
 
-        button2.setActionCommand("runAll");
-        button2.setLabel("Run All");
-        button2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                button2ActionPerformed(evt);
+        jScrollPane1.setMinimumSize(new java.awt.Dimension(258, 23));
+
+        jList1.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                jList1ValueChanged(evt);
             }
-        });
-        panel2.add(button2, java.awt.BorderLayout.SOUTH);
-
-        jList1.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
         });
         jScrollPane1.setViewportView(jList1);
 
-        panel2.add(jScrollPane1, java.awt.BorderLayout.CENTER);
+        jSplitPane1.setLeftComponent(jScrollPane1);
 
-        add(panel2, java.awt.BorderLayout.WEST);
+        jPanel2.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel2.setLayout(new java.awt.BorderLayout());
+        jSplitPane1.setRightComponent(jPanel2);
 
-        panel3.setBackground(new java.awt.Color(153, 153, 153));
-        panel3.setLayout(new java.awt.BorderLayout());
-        panel3.add(textArea1, java.awt.BorderLayout.CENTER);
+        jPanel1.add(jSplitPane1, java.awt.BorderLayout.CENTER);
 
-        textField1.setPreferredSize(new java.awt.Dimension(500, 20));
-        textField1.setText("textField1");
-        textField1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                textField1ActionPerformed(evt);
-            }
-        });
-        panel3.add(textField1, java.awt.BorderLayout.SOUTH);
-
-        add(panel3, java.awt.BorderLayout.CENTER);
+        add(jPanel1, java.awt.BorderLayout.CENTER);
 
         menu1.setLabel("File");
 
@@ -254,24 +334,39 @@ public class Batch_IJ extends PlugInFrame {
         IJ.run("Bio-Formats Importer");
     }//GEN-LAST:event_menuItem2ActionPerformed
 
-    private void textField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textField1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_textField1ActionPerformed
-
-    private void button2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button2ActionPerformed
-
-    }//GEN-LAST:event_button2ActionPerformed
-
     private void menuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItem5ActionPerformed
         // TODO add your handling code here:
-        DirectoryChooser opener = new DirectoryChooser(".");  
-        
+        DirectoryChooser opener = new DirectoryChooser(".");   
+        this.updateDir(opener.getDirectory());
     }//GEN-LAST:event_menuItem5ActionPerformed
 
-    
-    public void addCheckbox(javax.swing.JCheckBox checkBox) {
-        
-    }
+    private void jList1ValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jList1ValueChanged
+        // TODO add your handling code here:
+        String file;
+
+        try{
+            file = (String)((JList)evt.getSource()).getSelectedValue();
+
+            FileInputStream in = new FileInputStream(path + "\\" + file);
+            FileChannel channel = in.getChannel();
+            ByteBuffer buffer = ByteBuffer.allocate((int)channel.size());
+            channel.read(buffer);
+            Image image = load(buffer.array());
+            // make sure that the image is not too big
+            //  scale with a width of 500 
+            Image imageScaled = 
+              image.getScaledInstance(500, -1,  Image.SCALE_SMOOTH);
+            //
+            //IJ.log("image: " + path + "\n" + image);
+            //
+            dpnl.loadImage(imageScaled);
+            dpnl.repaint();
+            //Dimension dm = new Dimension(imageScaled.getWidth(null), imageScaled.getHeight(null));
+            //setPreferredSize(dm);
+        }catch(Exception e){}
+    }//GEN-LAST:event_jList1ValueChanged
+
+
     
     /**
      * @param args the command line arguments
@@ -279,38 +374,30 @@ public class Batch_IJ extends PlugInFrame {
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                if (args.length > 0) {
-                    (new Batch_IJ()).run(args[0]);
-                    System.exit(0);
-                }
-                else{
-                   (new Batch_IJ()).setVisible(true);
-                }
-                
+                (new Batch_IJ()).run(".");
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private java.awt.Button button2;
     private javax.swing.JList jList1;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JSplitPane jSplitPane1;
     private java.awt.Menu menu1;
     private java.awt.Menu menu2;
     private java.awt.MenuBar menuBar1;
     private java.awt.MenuItem menuItem1;
     private java.awt.MenuItem menuItem2;
     private java.awt.MenuItem menuItem5;
-    private java.awt.Panel panel2;
-    private java.awt.Panel panel3;
-    private java.awt.TextArea textArea1;
-    private java.awt.TextField textField1;
     // End of variables declaration//GEN-END:variables
 
-    String arg = "";
+    String path = "";
     CheckboxGroup cbg = new CheckboxGroup();
+    DrawPanel dpnl;
 }
